@@ -263,11 +263,20 @@ impl AttestationReport {
             let fam_id = self.cpuid_fam_id;
             let mod_id = self.cpuid_mod_id;
             let stepping = self.cpuid_step;
-            // 25: Zen 3, Zen 3+, Zen 4
+            // Family 25 (0x19): Zen 3, Zen 3+, Zen 4
             // Milan: Zen 3, Genoa: Zen 4, Bergamo: Zen 4c
             // Siena: Zen 4c, Turin: Zen 5, Venice: TBD.
-            if fam_id == 25 && mod_id == 1 {
-                return Ok(ProcessorType::Milan);
+            if fam_id == 25 {
+                match mod_id {
+                    1 => return Ok(ProcessorType::Milan),
+                    // Model 17 (0x11) = Genoa (EPYC 9004 series, Zen 4)
+                    17 => return Ok(ProcessorType::Genoa),
+                    // Model 160-175 (0xA0-0xAF) = Bergamo (EPYC 97x4 series, Zen 4c)
+                    160..=175 => return Ok(ProcessorType::Bergamo),
+                    // Model 16 (0x10) = Siena (EPYC 8004 series, Zen 4c)
+                    16 => return Ok(ProcessorType::Siena),
+                    _ => {}
+                }
             }
 
             bail!(
