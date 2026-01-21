@@ -22,3 +22,6 @@
 [submodule "contracts/lib/risc0-ethereum"]
 	path = contracts/lib/risc0-ethereum
 	url = https://github.com/risc0/risc0-ethereum
+[submodule "crates/amd-sev-snp-attestation-sdk"]
+	path = crates/amd-sev-snp-attestation-sdk
+	url = https://github.com/feltroidprime/amd-sev-snp-attestation-sdk.git

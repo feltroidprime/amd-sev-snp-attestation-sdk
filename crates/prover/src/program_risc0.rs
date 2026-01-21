@@ -15,8 +15,7 @@ use boundless_market::{
     contracts::FulfillmentData,
     request_builder::OfferParams,
     storage::storage_provider_from_env,
-    Deployment,
-    StorageProvider,
+    Deployment, StorageProvider,
 };
 use risc0_ethereum_contracts::{groth16, receipt::decode_seal_with_claim};
 use risc0_zkvm::{
@@ -87,7 +86,9 @@ impl TryFrom<RiscZeroProverConfig> for RemoteProverConfig {
     fn try_from(value: RiscZeroProverConfig) -> anyhow::Result<Self> {
         Ok(RemoteProverConfig {
             api_url: value.rpc_url,
-            api_key: value.private_key.ok_or_else(|| anyhow!("missing BOUNDLESS_PRIVATE_KEY"))?,
+            api_key: value
+                .private_key
+                .ok_or_else(|| anyhow!("missing BOUNDLESS_PRIVATE_KEY"))?,
         })
     }
 }
@@ -102,21 +103,27 @@ impl RiscZeroProverConfig {
 
     /// Get effective min price (config or default: 0.0001 gwei)
     pub fn effective_min_price(&self) -> U256 {
-        self.min_price
-            .map(U256::from)
-            .unwrap_or_else(|| parse_units(Self::DEFAULT_MIN_PRICE_GWEI, "gwei").unwrap().into())
+        self.min_price.map(U256::from).unwrap_or_else(|| {
+            parse_units(Self::DEFAULT_MIN_PRICE_GWEI, "gwei")
+                .unwrap()
+                .into()
+        })
     }
 
     /// Get effective max price (config or default: 0.001 gwei)
     pub fn effective_max_price(&self) -> U256 {
-        self.max_price
-            .map(U256::from)
-            .unwrap_or_else(|| parse_units(Self::DEFAULT_MAX_PRICE_GWEI, "gwei").unwrap().into())
+        self.max_price.map(U256::from).unwrap_or_else(|| {
+            parse_units(Self::DEFAULT_MAX_PRICE_GWEI, "gwei")
+                .unwrap()
+                .into()
+        })
     }
 
     /// Get effective collateral (default: 10 ETH)
     pub fn effective_collateral(&self) -> U256 {
-        parse_units(Self::DEFAULT_COLLATERAL_ETH, "ether").unwrap().into()
+        parse_units(Self::DEFAULT_COLLATERAL_ETH, "ether")
+            .unwrap()
+            .into()
     }
 
     /// Get effective timeout with buffer
@@ -268,9 +275,7 @@ impl<ZkType, Input, Output> ProgramRisc0<ZkType, Input, Output> {
 
     /// Dev mode: execute zkVM without proof generation
     fn gen_dev_proof(&self, input_bytes: &[u8]) -> anyhow::Result<RawProof> {
-        let env = ExecutorEnv::builder()
-            .write_slice(input_bytes)
-            .build()?;
+        let env = ExecutorEnv::builder().write_slice(input_bytes).build()?;
 
         let executor = default_executor();
         let session = executor.execute(env, self.elf)?;
@@ -325,12 +330,8 @@ impl<ZkType, Input, Output> ProgramRisc0<ZkType, Input, Output> {
         // - Extracts correct verifier parameters from the selector
         // - Handles Groth16, FakeReceipt, and SetVerifier seal types
         let claim = ReceiptClaim::ok(image_id, journal.clone());
-        let receipt = decode_seal_with_claim(
-            alloy_primitives::Bytes::from(seal),
-            claim,
-            journal,
-        )
-        .context("Failed to decode seal")?;
+        let receipt = decode_seal_with_claim(alloy_primitives::Bytes::from(seal), claim, journal)
+            .context("Failed to decode seal")?;
 
         receipt
             .receipt()

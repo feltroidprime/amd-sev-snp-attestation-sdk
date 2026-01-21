@@ -4,17 +4,14 @@ use std::path::PathBuf;
 
 use alloy_primitives::{hex, Bytes, B256, U256};
 use alloy_sol_types::SolValue;
+use amd_sev_snp_attestation_verifier::stub::{VerifierInput, VerifierJournal, ZkCoProcessorType};
 use anyhow::anyhow;
-use amd_sev_snp_attestation_verifier::stub::{
-    VerifierInput, VerifierJournal, ZkCoProcessorType,
-};
 use lazy_static::lazy_static;
 use p3_field::PrimeField;
 use pico_methods::PICO_VERIFIER_ELF;
 use pico_sdk::{client::KoalaBearProverClient, HashableKey};
 use pico_vm::{
-    configs::stark_config::KoalaBearPoseidon2,
-    emulator::stdin::EmulatorStdinBuilder,
+    configs::stark_config::KoalaBearPoseidon2, emulator::stdin::EmulatorStdinBuilder,
     machine::keys::BaseVerifyingKey,
 };
 

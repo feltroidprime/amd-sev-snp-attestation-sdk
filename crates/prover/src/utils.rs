@@ -5,8 +5,8 @@ use std::{
 
 use alloy_primitives::Bytes;
 use anyhow::{anyhow, Context, Result};
-use tokio::runtime::{Handle, Runtime};
 use serde::{Deserialize, Serialize};
+use tokio::runtime::{Handle, Runtime};
 
 pub fn block_on<T>(fut: impl std::future::Future<Output = T>) -> T {
     use tokio::task::block_in_place;

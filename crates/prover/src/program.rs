@@ -4,10 +4,10 @@
 //! zero-knowledge proof programs.
 //! It provides a unified interface for different ZK proof systems like RISC0 and SP1.
 
-use anyhow::anyhow;
-use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use alloy_primitives::{Bytes, B256};
 use alloy_sol_types::{SolType, SolValue};
+use anyhow::anyhow;
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 /// Core trait defining the interface for zero-knowledge proof programs.
 ///

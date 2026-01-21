@@ -3,7 +3,9 @@ use std::{
     time::{SystemTime, UNIX_EPOCH},
 };
 
-use amd_sev_snp_attestation_prover::{set_prover_dev_mode, utils::AttestationReportWithVekCertChain};
+use amd_sev_snp_attestation_prover::{
+    set_prover_dev_mode, utils::AttestationReportWithVekCertChain,
+};
 use amd_sev_snp_attestation_verifier::stub::VerifierJournal;
 use clap::Args;
 
